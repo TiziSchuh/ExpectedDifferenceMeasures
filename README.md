@@ -18,8 +18,9 @@ The syntax follows the scheme `lavaan_edm_` + the effect size measure of choice.
 ## fMACS
 work inprogress...
 
-# Raw `R` functions (not intended for the casual user)
-## Expected Differences
+[fMACS](https://www.tandfonline.com/doi/pdf/10.1080/10705511.2025.2484812): Lai, M. H., Zhang, Y., Ozcan, M., Tse, W. W. Y., & Miles, A. (2025). f MACS: Generalizing d MACS Effect Size for Measurement Noninvariance with Multiple Groups and Multiple Grouping Variables. Structural Equation Modeling: A Multidisciplinary Journal, 1-9.
+
+### Raw `R` functions (not intended for the casual user)
 Expected differences can be explicitely calculated using the R function 
 
 `exp_diff(load1, load2,
@@ -28,28 +29,26 @@ Expected differences can be explicitely calculated using the R function
          diff_type)`
 
 with options `diff_type` = `"signed"`, `"absolute"` or `"squared"`.
-## EDMs
-Syntax `edm_item_...` and `edm_item_..._signed`
 
-### dMACS
-* dMACS: `edm_item_dmacs(load_ref, load_foc, intrcp_ref, intrcp_foc, factor_mean_foc, factor_cov_foc, sd)`
-* dMACS_Signed: `edm_item_dmacs_signed(load_ref, load_foc,
+EDMs are implemented using the syntax `edm_item_...` and `edm_item_..._signed` analogous to their respective `lavaan` versions. 
+
+## dMACS
+`edm_item_dmacs(load_ref, load_foc, intrcp_ref, intrcp_foc, factor_mean_foc, factor_cov_foc, sd)`
+
+`edm_item_dmacs_signed(load_ref, load_foc,
                                   intrcp_ref, intrcp_foc,
                                   factor_mean_foc, factor_cov_foc,
                                   sd)`
-### deltaMACS
-* deltaMACS: `edm_item_deltamacs(load_ref, load_foc,
+## deltaMACS
+`edm_item_deltamacs(load_ref, load_foc,
                                intrcp_ref, intrcp_foc,
                                factor_mean_foc, factor_cov_foc,
                                sd_foc)`
-* deltaMACS_Signed: `edm_item_deltamacs_signed(load_ref, load_foc,
+`edm_item_deltamacs_signed(load_ref, load_foc,
                                       intrcp_ref, intrcp_foc,
                                       factor_mean_foc, factor_cov_foc,
                                       sd_foc)`
-### WUDI & SDI
-* WUDI: work in process...
-* SDI: work in process...
-### fMACS
-* fMACS: work in process...
-* fMACS_Weighted: work in process...
+## fMACS
+work in process...
+
 
