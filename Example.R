@@ -15,3 +15,5 @@ fit <- cfa(test_model, data = HolzingerSwineford1939, group = "school")
 
 # the extended version edm_dmacs
 lavaan_edm_dmacs(fit, ref_group = "Pasteur", foc_group = 2)
+
+lavaan_edm_deltamacs(fit, ref_group = "Pasteur", foc_group = 2)
