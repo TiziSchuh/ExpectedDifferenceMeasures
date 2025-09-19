@@ -52,8 +52,22 @@ lavaan_edm_dmacs <- function(fit, ref_group = 1, foc_group, dtype = "pooled") {
                    sd_pooled[x])
   })
 
+  dmacs_signed_index <- sapply(1:item_number, function(x){
+    edm_item_dmacs_signed(loading_matrix_ref[x, ], loading_matrix_foc[x, ],
+                          intercepts_ref[x], intercepts_foc[x],
+                          latent_mean_foc, latent_cov_matrix_foc,
+                          sd_pooled[x])
+  })
+
+  data_frame <- data.frame(
+    "dMACS" = dmacs_index,
+    "dMACS_Signed" = dmacs_signed_index,
+    row.names = rownames(nu_list[[ref_group]])
+  )
+
+  data_frame
   # create data frame
-  dmacs_index <- data.frame(dmacs_index,
-                            row.names = rownames(nu_list[[ref_group]]))
-  dmacs_index
+#  dmacs_index <- data.frame(dmacs_index,
+#                            row.names = rownames(nu_list[[ref_group]]))
+#  dmacs_index
 }
