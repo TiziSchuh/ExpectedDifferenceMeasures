@@ -2,7 +2,14 @@
 
 This repository implements [expected difference measures (EDMs)](https://osf.io/preprints/psyarxiv/cq9vk_v2) – in particular the **general version of dMACS** applicable to mutli-factorial models with cross-loading and factor-correlations.   
 
-# Raw `R` functions
+# `lavaan` functions
+Syntax `lavaan_edm_...`
+## dMACS
+* dMACS: `lavaan_edm_dmacs(fit, ref_group, foc_group)`
+* dMACS_Signed: work in progress
+
+
+# Raw `R` functions (not intended for the casual user)
 ## Expected Differences
 Expected differences can be explicitely calculated using the R function 
 
@@ -37,9 +44,3 @@ Syntax `edm_item_...` and `edm_item_..._signed`
 * fMACS: work in process...
 * fMACS_Weighted: work in process...
 
-# `lavaan` functions
-Syntax `lavaan_edm_...`
-## dMACS
-* dMACS: `lavaan_edm_dmacs(fit, group1, group2)`
-
-work in process...
