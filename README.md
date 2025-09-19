@@ -20,7 +20,7 @@ work inprogress...
 
 [fMACS](https://www.tandfonline.com/doi/pdf/10.1080/10705511.2025.2484812): Lai, M. H., Zhang, Y., Ozcan, M., Tse, W. W. Y., & Miles, A. (2025). f MACS: Generalizing d MACS Effect Size for Measurement Noninvariance with Multiple Groups and Multiple Grouping Variables. Structural Equation Modeling: A Multidisciplinary Journal, 1-9.
 
-### Raw `R` functions (not intended for the casual user)
+# Raw `R` functions (not intended for the casual user)
 Expected differences can be explicitely calculated using the R function 
 
 `exp_diff(load1, load2,
