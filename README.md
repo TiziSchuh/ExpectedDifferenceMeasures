@@ -1,13 +1,16 @@
 # Expected Difference Measures
 
-This repository implements [expected difference measures (EDMs)](https://osf.io/preprints/psyarxiv/cq9vk_v2) – in particular the **general version of dMACS** applicable to mutli-factorial models with cross-loading and factor-correlations.   
+This repository implements [expected difference measures (EDMs)](https://osf.io/preprints/psyarxiv/cq9vk_v2) – in particular the **general version of dMACS** applicable to mutli-factorial models with cross-loading and factor-correlations - in `lavaan`.   
 
-# `lavaan` functions
-Syntax `lavaan_edm_...`
+The syntax follows the scheme `lavaan_edm_` + the effect size measure of choice.
 ## dMACS
-* dMACS: `lavaan_edm_dmacs(fit, ref_group, foc_group)`
-* dMACS_Signed: work in progress
+`lavaan_edm_dmacs(fit, ref_group, foc_group)` returns the values of dMACS and dMACS_Signed for each item. 
 
+## deltaMACS (aka UDI & SDI) 
+work in progress
+
+## fMACS
+work inprogress...
 
 # Raw `R` functions (not intended for the casual user)
 ## Expected Differences
