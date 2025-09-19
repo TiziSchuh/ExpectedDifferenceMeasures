@@ -7,7 +7,7 @@ The syntax follows the scheme `lavaan_edm_` + the effect size measure of choice.
 `lavaan_edm_dmacs(fit, ref_group, foc_group)` returns the values of dMACS and dMACS_Signed for each item. 
 
 ## deltaMACS (aka UDI & SDI) 
-work in progress
+`lavaan_edm_deltamacs(fit, ref_group, foc_group)` returns the values of deltaMACS and deltaMACS_Signed for each item. 
 
 ## fMACS
 work inprogress...
