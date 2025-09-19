@@ -32,14 +32,13 @@ with options `diff_type` = `"signed"`, `"absolute"` or `"squared"`.
 
 EDMs are implemented using the syntax `edm_item_...` and `edm_item_..._signed` analogous to their respective `lavaan` versions. 
 
-## dMACS
+### dMACS
 `edm_item_dmacs(load_ref, load_foc, intrcp_ref, intrcp_foc, factor_mean_foc, factor_cov_foc, sd)`
-
 `edm_item_dmacs_signed(load_ref, load_foc,
                                   intrcp_ref, intrcp_foc,
                                   factor_mean_foc, factor_cov_foc,
                                   sd)`
-## deltaMACS
+### deltaMACS
 `edm_item_deltamacs(load_ref, load_foc,
                                intrcp_ref, intrcp_foc,
                                factor_mean_foc, factor_cov_foc,
@@ -48,7 +47,7 @@ EDMs are implemented using the syntax `edm_item_...` and `edm_item_..._signed` a
                                       intrcp_ref, intrcp_foc,
                                       factor_mean_foc, factor_cov_foc,
                                       sd_foc)`
-## fMACS
+### fMACS
 work in process...
 
 
