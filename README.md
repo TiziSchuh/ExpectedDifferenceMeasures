@@ -1,6 +1,6 @@
 # Expected Difference Measures
 
-This repository implements Expected Difference Measures (EDMs) – a class of effect size measures for measurement non-invariance (that includes the generalized version of **dMACS**) allowing **mutli-factorial models** with **cross-loading** and **factor-correlations**) – as `lavaan` functions for multi-group `fit` objects.
+This repository implements Expected Difference Measures (EDMs) – a class of effect size measures for measurement non-invariance (that includes the generalized version of **dMACS**) allowing **mutli-factorial models** with **cross-loading** and **factor-correlations** – as `lavaan` functions for multi-group `fit` objects.
 
 [EDMs](https://osf.io/preprints/psyarxiv/cq9vk_v2): Schuhbeck, T. M. B., Sterner, P., & Goretzko, D. (2025, July 10). Quantifying Measurement Non-Invariance Beyond Simple Structure: The Closed Formulas of Universal Effect Size Measures for MI. https://doi.org/10.31234/osf.io/cq9vk_v2
 
