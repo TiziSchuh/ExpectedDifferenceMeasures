@@ -6,9 +6,9 @@ This repository implements Expected Difference Measures (EDMs) – a class of ef
 
 ## Usage
 
-Download the files `edm.R` and `lavaan_edm.R` and include `source("lavaan_edm.R")` in the header of your project.
+Download the files `edm.R` and `lavaan_edm.R` to the same location of your project and include `source("lavaan_edm.R")` in the header of your file.
 
-The syntax of all EDM functions follows the scheme `lavaan_edm_` + specific effect size measure of choice:
+The syntax of all effect sizes follows the scheme `lavaan_edm_` + specific EDM of choice:
 ### dMACS
 `lavaan_edm_dmacs(fit, ref_group, foc_group)` returns the values of dMACS and dMACS_Signed for each item. 
 
