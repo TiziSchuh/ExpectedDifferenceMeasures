@@ -10,7 +10,9 @@ Download the files `edm.R` and `lavaan_edm.R` to the same location of your proje
 
 The syntax of all effect sizes follows the scheme `lavaan_edm_` + specific EDM of choice:
 ### dMACS
-`lavaan_edm_dmacs(fit, ref_group, foc_group)` returns the values of dMACS and dMACS_Signed for each item. 
+`lavaan_edm_dmacs(fit, ref_group, foc_group)` returns the values of **dMACS** and **dMACS_Signed** for each item. 
+
+
 
 [dMACS](https://www.researchgate.net/profile/Christopher-Nye-2/publication/50998374_Effect_Size_Indices_for_Analyses_of_Measurement_Equivalence_Understanding_the_Practical_Importance_of_Differences_Between_Groups/links/550859a20cf26ff55f816638/Effect-Size-Indices-for-Analyses-of-Measurement-Equivalence-Understanding-the-Practical-Importance-of-Differences-Between-Groups.pdf): Nye, C. D., & Drasgow, F. (2011). Effect size indices for analyses of measurement equivalence: understanding the practical importance of differences between groups. Journal of applied psychology, 96(5), 966.
 
