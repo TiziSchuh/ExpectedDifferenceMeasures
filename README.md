@@ -1,6 +1,6 @@
 # Expected Difference Measures
 
-This repository implements [expected difference measures (EDMs)](https://osf.io/preprints/psyarxiv/cq9vk_v2) – most notably the **generalized version of dMACS** (allows for mutli-factorial models with cross-loading and factor-correlations) – as `lavaan` functions for multi-group `fit` objects   
+This repository implements [expected difference measures (EDMs)](https://osf.io/preprints/psyarxiv/cq9vk_v2) – most notably the generalized version of **dMACS** allowing **mutli-factorial models** with **cross-loading** and **factor-correlations**) – as `lavaan` functions for multi-group `fit` objects   
 
 ## Usage
 
