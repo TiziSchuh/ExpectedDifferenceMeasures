@@ -1,123 +1,164 @@
+library(pracma) # erf() needed in \code(exp_response_diff)
 library(lavaan)
-source("edm.R")
 
 
-# see \code{colSD} in ddueber/dmacs
-# "..." later "na.rm = TRUE" to exlude missing values
-col_sd <- function(x, ...) {
+#' \code(exp_response_diff) calculates the expected response difference of
+#' two given group-specific FA models assuming a joint normal distribution
+#' of the latent factors
+#'
+#' diffType="signed" returns E[Y_1-Y_2]
+#' diffType="absolute" returns E[|Y_1-Y_2|]
+#' diffType="squared" returns E[|Y_1-Y_2|^2]
+#'
+#' where Y_g denotes the linear FA model with parameters estimated using the
+#' data of group g
+
+
+exp_response_diff <- function(loading1, loading2,
+                     intercept1, intercept2,
+                     latentMean, latentCov,
+                     diffType = "signed") {
+
+  # calculate mean and var of model difference Y_1-Y_2
+  interceptDiff <- intercept1 - intercept2
+  loadingDiff <- matrix(loading1) - matrix(loading2)
+
+  mean <- interceptDiff + t(loadingDiff) %*% matrix(latentMean)
+  var <- t(loadingDiff) %*% latentCov %*% loadingDiff
+
+  # calculate expected value
+  if (diffType == "signed") {
+    exp <- mean
+  } else if (diffType == "absolute") {
+    exp <- (sqrt(var) * sqrt(2/pi) * exp(-((mean^2) / (2 * var)))
+            + mean * erf(mean / sqrt(2 * var)))
+  } else if (diffType == "squared") {
+    exp <- mean^2 + var
+  } else {
+    stop("exp_diff only supported for \"signed\", \"absolute\" and \"squared\"")
+  }
+
+  # get rid of matrix
+  exp[1, 1]
+}
+
+
+colSd <- function(x, ...) {
   apply(X = x, MARGIN = 2, FUN = sd, ...)
 }
 
 
-lavaan_edm_dmacs <- function(fit, ref_group = 1, foc_group) {
-  fit_est <- lavaan::lavInspect(fit, "est")
-  fit_data <- lavaan::lavInspect(fit, "data")
+lavaan_edm <- function(fit, refGroup = 1, focGroup = 2,
+                               sdType = "pooled", edType = "squared") {
+  fitEst <- lavaan::lavInspect(fit, "est")
+  fitData <- lavaan::lavInspect(fit, "data")
 
-  lambda_list <- lapply(fit_est, function(x) {
+  lambdaList <- lapply(fitEst, function(x) {
     x$lambda
   })
-  nu_list <- lapply(fit_est, function(x) {
+  nuList <- lapply(fitEst, function(x) {
     x$nu
   })
-  alpha_list <- lapply(fit_est, function(x) {
+  alphaList <- lapply(fitEst, function(x) {
     x$alpha
   })
-  psi_list <- lapply(fit_est, function(x) {
+  psiList <- lapply(fitEst, function(x) {
     x$psi
   })
 
-  # get raw values
-  loading_matrix_ref <- unname(lambda_list[[ref_group]])
-  loading_matrix_foc <- unname(lambda_list[[foc_group]])
-  intercepts_ref <- unname(nu_list[[ref_group]])
-  intercepts_foc <- unname(nu_list[[foc_group]])
-  latent_mean_foc <- unname(alpha_list[[foc_group]])
-  latent_cov_matrix_foc <- unname(psi_list[[foc_group]])
+  # get raw paramters
+  loadingsRef <- unname(lambdaList[[refGroup]])
+  loadingsFoc <- unname(lambdaList[[focGroup]])
+  interceptsRef <- unname(nuList[[refGroup]])
+  interceptsFoc <- unname(nuList[[focGroup]])
+  latentMeanFoc <- unname(alphaList[[focGroup]])
+  latentCovFoc <- unname(psiList[[focGroup]])
+  nItem <- length(interceptsRef)
 
-  # pooled standard deviation
-  sd_ref <- col_sd(fit_data[[ref_group]], na.rm = TRUE)
-  n_ref <- colSums(!is.na(fit_data[[ref_group]]))
-  sd_foc <- col_sd(fit_data[[foc_group]], na.rm = TRUE)
-  n_foc <- colSums(!is.na(fit_data[[foc_group]]))
-  sd_pooled <- ((n_foc - 1) * sd_foc + (n_ref - 1) * sd_ref) /
-    ((n_foc - 1) + (n_ref - 1))
-  sd_pooled <- unname(sd_pooled)
+  if (sdType == "pooled") {
+    sdRef <- colSd(fitData[[refGroup]], na.rm = TRUE)
+    nRef <- colSums(!is.na(fitData[[refGroup]]))
+    sdFoc <- colSd(fitData[[focGroup]], na.rm = TRUE)
+    nFoc <- colSums(!is.na(fitData[[focGroup]]))
+    sd <- ((nFoc - 1) * sdFoc + (nRef - 1) * sdRef) /
+      ((nFoc - 1) + (nRef - 1))
+    sd <- unname(sd)
+  } else if (sdType == "ref") {
+    sd <- unname(colSd(fitData[[refGroup]], na.rm = TRUE))
+  } else if (sdType == "foc") {
+    sd <- unname(colSd(fitData[[focGroup]], na.rm = TRUE))
+  } else if (sdType == NULL) {
+    sd <- rep(1, nItem)
+  } else {
+    stop("sdType must be \"pooled\", \"ref\", \"foc\" or NULL")
+  }
 
-  item_number <- length(intercepts_ref)
-
-  dmacs_index <- sapply(1:item_number, function(x){
-    edm_item_dmacs(loading_matrix_ref[x, ], loading_matrix_foc[x, ],
-                   intercepts_ref[x], intercepts_foc[x],
-                   latent_mean_foc, latent_cov_matrix_foc,
-                   sd_pooled[x])
+  # calculate effect size
+  unsignedIndex <- sapply(1:nItem, function(i){
+    sqrt(
+      exp_response_diff(loadingsRef[i, ], loadingsFoc[i, ],
+                        interceptsRef[i], interceptsFoc[i],
+                        latentMeanFoc, latentCovFoc,
+                        diffType = edType)
+    ) / sd[i]
+  })
+  signedIndex <- sapply(1:nItem, function(i){
+    exp_response_diff(loadingsRef[i, ], loadingsFoc[i, ],
+                      interceptsRef[i], interceptsFoc[i],
+                      latentMeanFoc, latentCovFoc,
+                      diffType = "signed") / sd[i]
   })
 
-  dmacs_signed_index <- sapply(1:item_number, function(x){
-    edm_item_dmacs_signed(loading_matrix_ref[x, ], loading_matrix_foc[x, ],
-                          intercepts_ref[x], intercepts_foc[x],
-                          latent_mean_foc, latent_cov_matrix_foc,
-                          sd_pooled[x])
-  })
+  # create dataframe
+  if (sdType == "pooled" && edType == "squared") { # dmacs
+    dataFrame <- data.frame(
+      "dmacs" = unsignedIndex,
+      "dmacs_signed" = signedIndex,
+      row.names = rownames(nuList[[refGroup]])
+    )
+  } else if (sdType == "ref" && edType == "squared") { # deltamacs
+    dataFrame <- data.frame(
+      "deltamacs" = unsignedIndex,
+      "deltamacs_signed" = signedIndex,
+      row.names = rownames(nuList[[refGroup]])
+    )
+  } else if (sdType == "foc" && edType == "absolute") { # UDI,SDI
+    dataFrame <- data.frame(
+      "UDI" = unsignedIndex,
+      "SDI" = signedIndex,
+      row.names = rownames(nuList[[refGroup]])
+    )
+  } else {
+    dataFrame <- data.frame(
+      "unsigned" = unsignedIndex,
+      "signed" = signedIndex,
+      row.names = rownames(nuList[[refGroup]])
+    )
+  }
 
-  data_frame <- data.frame(
-    "dMACS" = dmacs_index,
-    "dMACS_Signed" = dmacs_signed_index,
-    row.names = rownames(nu_list[[ref_group]])
-  )
+  groups <- names(nuList)
+  if (is.numeric(refGroup)) {
+    message("ref: ", groups[refGroup])
+  } else {
+    message("ref: ", refGroup)
+  }
+  if (is.numeric(focGroup)) {
+    message("foc: ", groups[focGroup])
+  } else {
+    message("foc: ", focGroup)
+  }
 
-  data_frame
+  dataFrame
 }
 
+lavaan_edm_dmacs <- function(fit, refGroup = 1, focGroup = 2) {
+  lavaan_edm(fit, refGroup, focGroup)
+}
 
-lavaan_edm_deltamacs <- function(fit, ref_group = 1, foc_group) {
-  fit_est <- lavaan::lavInspect(fit, "est")
-  fit_data <- lavaan::lavInspect(fit, "data")
+lavaan_edm_deltamacs <- function(fit, refGroup = 1, focGroup = 2) {
+  lavaan_edm(fit, refGroup, focGroup, sdType = "ref")
+}
 
-  lambda_list <- lapply(fit_est, function(x) {
-    x$lambda
-  })
-  nu_list <- lapply(fit_est, function(x) {
-    x$nu
-  })
-  alpha_list <- lapply(fit_est, function(x) {
-    x$alpha
-  })
-  psi_list <- lapply(fit_est, function(x) {
-    x$psi
-  })
-
-  # get raw values
-  loading_matrix_ref <- unname(lambda_list[[ref_group]])
-  loading_matrix_foc <- unname(lambda_list[[foc_group]])
-  intercepts_ref <- unname(nu_list[[ref_group]])
-  intercepts_foc <- unname(nu_list[[foc_group]])
-  latent_mean_foc <- unname(alpha_list[[foc_group]])
-  latent_cov_matrix_foc <- unname(psi_list[[foc_group]])
-
-  # standard deviation of the reference group
-  sd_ref <- unname(col_sd(fit_data[[ref_group]], na.rm = TRUE))
-
-  item_number <- length(intercepts_ref)
-
-  deltamacs_index <- sapply(1:item_number, function(x){
-    edm_item_deltamacs(loading_matrix_ref[x, ], loading_matrix_foc[x, ],
-                       intercepts_ref[x], intercepts_foc[x],
-                       latent_mean_foc, latent_cov_matrix_foc,
-                       sd_ref[x])
-  })
-
-  deltamacs_signed_index <- sapply(1:item_number, function(x){
-    edm_item_deltamacs_signed(loading_matrix_ref[x, ], loading_matrix_foc[x, ],
-                              intercepts_ref[x], intercepts_foc[x],
-                              latent_mean_foc, latent_cov_matrix_foc,
-                              sd_ref[x])
-  })
-
-  data_frame <- data.frame(
-    "deltaMACS" = deltamacs_index,
-    "deltaMACS_Signed" = deltamacs_signed_index,
-    row.names = rownames(nu_list[[ref_group]])
-  )
-
-  data_frame
+lavaan_edm_DI <- function(fit, refGroup = 1, focGroup = 2) {
+  lavaan_edm(fit, refGroup, focGroup, sdType = "foc", edType = "absolute")
 }
