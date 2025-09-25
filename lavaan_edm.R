@@ -15,9 +15,9 @@ library(lavaan)
 
 
 exp_response_diff <- function(loading1, loading2,
-                     intercept1, intercept2,
-                     latentMean, latentCov,
-                     diffType = "signed") {
+                              intercept1, intercept2,
+                              latentMean, latentCov,
+                              diffType = "signed") {
 
   # calculate mean and var of model difference Y_1-Y_2
   interceptDiff <- intercept1 - intercept2
@@ -110,19 +110,19 @@ lavaan_edm <- function(fit, refGroup = 1, focGroup = 2,
   })
 
   # create dataframe
-  if (sdType == "pooled" && edType == "squared") { # dmacs
+  if (sdType == "pooled" && edType == "squared") {
     dataFrame <- data.frame(
       "dmacs" = unsignedIndex,
       "dmacs_signed" = signedIndex,
       row.names = rownames(nuList[[refGroup]])
     )
-  } else if (sdType == "ref" && edType == "squared") { # deltamacs
+  } else if (sdType == "ref" && edType == "squared") {
     dataFrame <- data.frame(
       "deltamacs" = unsignedIndex,
       "deltamacs_signed" = signedIndex,
       row.names = rownames(nuList[[refGroup]])
     )
-  } else if (sdType == "foc" && edType == "absolute") { # UDI,SDI
+  } else if (sdType == "foc" && edType == "absolute") {
     dataFrame <- data.frame(
       "UDI" = unsignedIndex,
       "SDI" = signedIndex,
@@ -151,13 +151,16 @@ lavaan_edm <- function(fit, refGroup = 1, focGroup = 2,
   dataFrame
 }
 
+
 lavaan_edm_dmacs <- function(fit, refGroup = 1, focGroup = 2) {
   lavaan_edm(fit, refGroup, focGroup)
 }
 
+
 lavaan_edm_deltamacs <- function(fit, refGroup = 1, focGroup = 2) {
   lavaan_edm(fit, refGroup, focGroup, sdType = "ref")
 }
+
 
 lavaan_edm_DI <- function(fit, refGroup = 1, focGroup = 2) {
   lavaan_edm(fit, refGroup, focGroup, sdType = "foc", edType = "absolute")
