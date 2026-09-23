@@ -169,7 +169,7 @@ lavaan_edm_DI <- function(fit, refGroup = 1, focGroup = 2) {
 
 
 
-lavaan_edm_fmacs <- function(fit, fitGlobal) {
+lavaan_edm_fmacs <- function(fit, fitGlobal, SRTESD = FALSE) {
 
   # global paramters
   loadingMatrix_global <- lavTech(fitGlobal, "est")$lambda
@@ -206,22 +206,42 @@ lavaan_edm_fmacs <- function(fit, fitGlobal) {
 
   # calculate effect per item
   
-  fmacs <- numeric(numbItems)
-  for (i in 1:numbItems) {
-    TESD <- 0
-    for (g in 1:numbGroups){ 
-      TESD <- TESD + p[g] * exp_response_diff(loadingMatrix_global[i, ], loadingMatrix[[g]][i, ],
-                                                  intercepts_global[i], intercepts[[g]][i],
-                                                  latentMean[[g]], latentCov[[g]],
-                                                  diffType = "squared")
+  if(SRTESD == TRUE) {
+    SRTESD <- numeric(numbItems)
+    for (i in 1:numbItems) {
+      TESD <- 0
+      for (g in 1:numbGroups) { 
+        TESD <- TESD + p[g] * exp_response_diff(loadingMatrix_global[i, ], loadingMatrix[[g]][i, ],
+                                                    intercepts_global[i], intercepts[[g]][i],
+                                                    latentMean[[g]], latentCov[[g]],
+                                                    diffType = "squared")
+      }
+      SRTESD[i] <- sqrt(TESD) / sd[i]
     }
-    fmacs[i] <- sqrt((1/numbGroups)* TESD) / sd[i]
-  }
 
-  dataFrame <- data.frame(
-      "fmacs" = fmacs,
-      row.names = rownames(lavInspect(fit, "est")[[1]]$nu)
-    )
- 
+    dataFrame <- data.frame(
+        "SRTESD" = SRTESD,
+        row.names = rownames(lavInspect(fit, "est")[[1]]$nu)
+      )
+  }
+  else {
+    fmacs <- numeric(numbItems)
+    for (i in 1:numbItems) {
+      TESD <- 0
+      for (g in 1:numbGroups) { 
+        TESD <- TESD + p[g] * exp_response_diff(loadingMatrix_global[i, ], loadingMatrix[[g]][i, ],
+                                                    intercepts_global[i], intercepts[[g]][i],
+                                                    latentMean[[g]], latentCov[[g]],
+                                                    diffType = "squared")
+      }
+      fmacs[i] <- sqrt((1/numbGroups)* TESD) / sd[i]
+    }
+
+    dataFrame <- data.frame(
+        "fmacs" = fmacs,
+        row.names = rownames(lavInspect(fit, "est")[[1]]$nu)
+      )
+  }
+  
   dataFrame
 }

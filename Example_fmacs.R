@@ -9,3 +9,4 @@ fit <- cfa(test_model, data = HolzingerSwineford1939, group = "school")
 fitGlobal <- cfa(test_model, data = HolzingerSwineford1939, meanstructure = TRUE)
 
 lavaan_edm_fmacs(fit, fitGlobal)
+lavaan_edm_fmacs(fit, fitGlobal, SRTESD = TRUE)
