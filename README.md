@@ -38,7 +38,7 @@ work inprogress...
 
 [WUDI&WSDI](https://core.ac.uk/download/pdf/200249537.pdf): Gunn, H. J. (2019). Evaluation of Five Effect Size Measures of Measurement Non-invariance for Continuous Outcomes (Doctoral dissertation, Arizona State University).
 ### `lavaan_edm_fmacs(fit, fitGlobal, SRTESD = FALSE)`
-returns the values of **fMACS** for a multi-group laavan `fit` object with the baseline given by the corresponding single group lavaan `fitGlobal` object. 
+returns the values of **fMACS** for a multi-group laavan `fit` object with the baseline given by the corresponding single group lavaan `fit` object (fitGlobal). 
 Setting the optional argument `SRTESD` to `TRUE` removes the (most likely unwanted) term 1/G in the formula of fMCAS, allowing for broad comparability across any groupings.
 
 [fMACS](https://www.tandfonline.com/doi/pdf/10.1080/10705511.2025.2484812): Lai, M. H., Zhang, Y., Ozcan, M., Tse, W. W. Y., & Miles, A. (2025). f MACS: Generalizing d MACS Effect Size for Measurement Noninvariance with Multiple Groups and Multiple Grouping Variables. Structural Equation Modeling: A Multidisciplinary Journal, 1-9.
