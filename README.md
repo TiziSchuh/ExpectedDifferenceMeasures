@@ -1,3 +1,6 @@
+! Update: The `R` package [MNIeffect](https://github.com/TiziSchuh/MNIeffect) implements effect sizes of measurement non-invariance more generally. 
+
+
 # Expected Difference Measures
 
 This repository implements Expected Difference Measures (EDMs) – a class of effect size measures for measurement non-invariance (including a generalized version of **dMACS** allowing **mutli-factorial models** with **cross-loading** and **factor-correlations**) – as `lavaan` functions for multi-group `fit` objects.
