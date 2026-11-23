@@ -1,4 +1,4 @@
-! Update: The `R` package [MNIeffect](https://github.com/TiziSchuh/MNIeffect) implements effect sizes of measurement non-invariance more generally. 
+**! Update !** The `R` package [MNIeffect](https://github.com/TiziSchuh/MNIeffect) implements effect sizes of measurement non-invariance more generally. 
 
 
 # Expected Difference Measures
